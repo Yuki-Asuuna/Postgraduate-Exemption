@@ -1,14 +1,24 @@
 package main
-import(
+
+import (
+	"Postgraduate-Exemption/utils"
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"github.com/sirupsen/logrus"
 )
-func main(){
-	r := gin.Default()
-	r.GET("/ping",func(c *gin.Context){
-		c.JSON(http.StatusOK,gin.H{
-			"message":"pong",
-		})
-	})
-	r.Run(":8000")
+
+var r = gin.Default()
+
+func main() {
+	// init api handler
+	http_handler_init()
+
+	// init database
+	if err := utils.MysqlInit(); err != nil {
+		logrus.Error(err)
+	}
+
+	// start gin
+	if err := r.Run(":8000"); err != nil {
+		logrus.Error(err)
+	}
 }
