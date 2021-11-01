@@ -1,7 +1,8 @@
 package database
 
 import (
-	"Postgraduate-Exemption/utils"
+	"Postgraduate-Exemption/constant"
+	"Postgraduate-Exemption/utils/mysql"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
 	"time"
@@ -9,11 +10,11 @@ import (
 
 func GetUserByUserName(userName string) (*User, error) {
 	user := new(User)
-	if err := utils.GetMySQLClient().Where("user_name = ?", userName).Find(&user).Error; err != nil {
+	if err := mysql.GetMySQLClient().Where("user_name = ?", userName).Find(&user).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
-		logrus.Errorf("[database] GetUserByUserName failed, err= %v", err)
+		logrus.Errorf(constant.DAO+"GetUserByUserName Failed, err= %v", err)
 		return nil, err
 	}
 	return user, nil
@@ -26,8 +27,8 @@ func AddUser(username string, password string) error {
 		CreateTime: time.Now(),
 		UpdateTime: time.Now(),
 	}
-	if err := utils.GetMySQLClient().Create(&user).Error; err != nil {
-		logrus.Errorf("[database] AddUser failed, err= %v", err)
+	if err := mysql.GetMySQLClient().Create(&user).Error; err != nil {
+		logrus.Errorf(constant.DAO+"AddUser Failed, err= %v", err)
 		return err
 	}
 	return nil
