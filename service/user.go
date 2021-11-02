@@ -14,6 +14,8 @@ func Register(c *gin.Context) {
 	c.BindJSON(&params)
 	username := params["username"].(string)
 	password := params["password"].(string)
+	identity := params["identity"].(int64)
+	phonenumber := params["phone_number"].(string)
 	user, err := database.GetUserByUserName(username)
 	if err != nil {
 		logrus.Error(constant.Service+"Register Failed, err= %v", err)
@@ -26,7 +28,7 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
-	if err := database.AddUser(username, password); err != nil {
+	if err := database.AddUser(username, password, identity, phonenumber); err != nil {
 		logrus.Error(constant.Service+"Register Failed, err= %v", err)
 		c.JSON(http.StatusConflict, gin.H{
 			"message": "UserName already exists",

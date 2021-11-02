@@ -20,12 +20,14 @@ func GetUserByUserName(userName string) (*User, error) {
 	return user, nil
 }
 
-func AddUser(username string, password string) error {
+func AddUser(username string, password string, identity int64, phonenumber string) error {
 	user := User{
-		UserName:   username,
-		Password:   password,
-		CreateTime: time.Now(),
-		UpdateTime: time.Now(),
+		UserName:    username,
+		Password:    password,
+		Identity:    identity,
+		PhoneNumber: phonenumber,
+		CreateTime:  time.Now(),
+		UpdateTime:  time.Now(),
 	}
 	if err := mysql.GetMySQLClient().Create(&user).Error; err != nil {
 		logrus.Errorf(constant.DAO+"AddUser Failed, err= %v", err)
