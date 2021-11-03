@@ -11,4 +11,7 @@ func http_handler_init() {
 	r.POST("/login", service.Login)
 	r.POST("/logout", service.Logout)
 	r.GET("/home", service.AuthMiddleWare(), service.Home)
+
+	// image
+	r.POST("/upload_image", service.UploadImage)
 }
