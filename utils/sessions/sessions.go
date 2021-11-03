@@ -10,7 +10,7 @@ var client *redistore.RediStore
 func SessionInit() error {
 	var err error
 	// TODO: Add secret key
-	client, err = redistore.NewRediStore(10, "tcp", "127.0.0.1:6379", "", []byte("secret key"))
+	client, err = redistore.NewRediStore(10, "tcp", "127.0.0.1:6379", "123456", []byte("secret key"))
 	if err != nil {
 		return err
 	}

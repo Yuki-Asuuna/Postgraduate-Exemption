@@ -14,7 +14,7 @@ func Register(c *gin.Context) {
 	c.BindJSON(&params)
 	username := params["username"].(string)
 	password := params["password"].(string)
-	identity := params["identity"].(int64)
+	identity := int64(params["identity"].(float64))
 	phonenumber := params["phone_number"].(string)
 	user, err := database.GetUserByUserName(username)
 	if err != nil {
