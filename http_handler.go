@@ -13,5 +13,5 @@ func http_handler_init() {
 	r.GET("/home", service.AuthMiddleWare(), service.Home)
 
 	// image
-	r.POST("/upload_image", service.UploadImage)
+	r.POST("/upload_image", service.UploadImageTest)
 }
