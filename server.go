@@ -7,14 +7,29 @@ import (
 	"Postgraduate-Exemption/utils/snowflake"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	"io"
+	"os"
 )
 
 var r = gin.Default()
 
+func logger_init() error {
+	logrus.SetReportCaller(true)
+	file_writer, err := os.OpenFile("./log/sys.log", os.O_WRONLY|os.O_CREATE, 0755)
+	if err != nil {
+		panic("Cannot Open sys.log")
+		return err
+	}
+	logrus.SetOutput(io.MultiWriter(os.Stdout, file_writer))
+	return nil
+}
+
 func main() {
+	// init logger
+	logger_init()
+
 	// init api handler
 	http_handler_init()
-
 	// init unique id generator (twitter/snowflake)
 	if err := snowflake.SnowflakeInit(); err != nil {
 		logrus.Errorf(constant.Main+"Init Snowflake Failed, err= %v", err)
