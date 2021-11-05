@@ -36,6 +36,14 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
+	if err := database.AddAgreement(username); err != nil {
+		logrus.Error(constant.Service+"Register Failed, err= %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Database failed",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
 	c.JSON(http.StatusOK, GenResponseWithOK())
 }
 
