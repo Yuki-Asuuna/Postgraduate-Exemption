@@ -14,4 +14,8 @@ func http_handler_init() {
 
 	// image
 	r.POST("/upload_image", service.UploadImageTest)
+
+	// info
+	r.GET("/stu_basic_info",service.StudentBasicInfo)
+	r.GET("/account_info",service.GetAccountInfo)
 }

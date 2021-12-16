@@ -20,12 +20,14 @@ func GetUserByUserName(userName string) (*User, error) {
 	return user, nil
 }
 
-func AddUser(username string, password string, identity int64, phonenumber string) error {
+func AddUser(username string, password string, identity int64, phonenumber string, university string, major string) error {
 	user := User{
 		UserName:    username,
 		Password:    password,
 		Identity:    identity,
 		PhoneNumber: phonenumber,
+		University:  university,
+		Major:       major,
 		CreateTime:  time.Now(),
 		UpdateTime:  time.Now(),
 	}

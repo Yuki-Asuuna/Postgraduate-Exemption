@@ -1,6 +1,7 @@
 package service
 
 import (
+	"Postgraduate-Exemption/api"
 	"Postgraduate-Exemption/constant"
 	"Postgraduate-Exemption/database"
 	"Postgraduate-Exemption/utils/sessions"
@@ -16,6 +17,8 @@ func Register(c *gin.Context) {
 	password := params["password"].(string)
 	identity := int64(params["identity"].(float64))
 	phonenumber := params["phone_number"].(string)
+	university := params["university"].(string)
+	major := params["major"].(string)
 	user, err := database.GetUserByUserName(username)
 	if err != nil {
 		logrus.Error(constant.Service+"Register Failed, err= %v", err)
@@ -24,15 +27,15 @@ func Register(c *gin.Context) {
 	if user != nil {
 		c.JSON(http.StatusConflict, gin.H{
 			"message": "UserName already exists",
-			"status":  http.StatusConflict,
+			"code":    -1,
 		})
 		return
 	}
-	if err := database.AddUser(username, password, identity, phonenumber); err != nil {
+	if err := database.AddUser(username, password, identity, phonenumber, university, major); err != nil {
 		logrus.Error(constant.Service+"Register Failed, err= %v", err)
 		c.JSON(http.StatusConflict, gin.H{
 			"message": "UserName already exists",
-			"status":  http.StatusConflict,
+			"code":    -1,
 		})
 		return
 	}
@@ -40,7 +43,7 @@ func Register(c *gin.Context) {
 		logrus.Error(constant.Service+"Register Failed, err= %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Database failed",
-			"status":  http.StatusInternalServerError,
+			"code":    -1,
 		})
 		return
 	}
@@ -60,14 +63,14 @@ func Login(c *gin.Context) {
 	if user == nil {
 		c.JSON(http.StatusNoContent, gin.H{
 			"message": "UserName Not Found",
-			"status":  http.StatusNoContent,
+			"code":    -1,
 		})
 		return
 	}
 	if password != user.Password {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Incorrect Password",
-			"status":  http.StatusUnauthorized,
+			"code":    -1,
 		})
 		return
 	}
@@ -91,4 +94,25 @@ func Logout(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, GenResponseWithOK())
+}
+
+func GetAccountInfo(c *gin.Context) {
+	username := sessions.GetUserNameBySession(c)
+	account, err := database.GetUserByUserName(username)
+	if err != nil {
+		logrus.Errorf(constant.Service+"GetAccountInfo Failed, err= %v", err)
+		return
+	}
+	resp := api.GetAccountInfoResponse{
+		UserName:    account.UserName,
+		PhoneNumber: account.PhoneNumber,
+		Identity:    account.Identity,
+		University:  account.University,
+		Major:       account.Major,
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message":     "OK",
+		"code":        0,
+		"accountInfo": resp,
+	})
 }

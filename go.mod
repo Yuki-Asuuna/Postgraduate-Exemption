@@ -3,7 +3,7 @@ module Postgraduate-Exemption
 go 1.16
 
 require (
-	github.com/GUAIK-ORG/go-snowflake v0.0.0-20200116064823-220c4260e85f // indirect
+	github.com/GUAIK-ORG/go-snowflake v0.0.0-20200116064823-220c4260e85f
 	github.com/garyburd/redigo v1.6.2 // indirect
 	github.com/gin-gonic/gin v1.7.4
 	github.com/go-playground/validator/v10 v10.9.0 // indirect

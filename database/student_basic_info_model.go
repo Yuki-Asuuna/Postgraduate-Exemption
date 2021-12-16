@@ -9,12 +9,12 @@ type StudentBasicInfo struct {
 	PoliticalStatus        int64
 	Gender                 int64
 	MartialStatus          int64
-	BirthLocationProvince  int64
-	BirthLocationCity      int64
-	BirthLocationCounty    int64
-	NativeLocationProvince int64
-	NativeLocationCity     int64
-	NativeLocationCounty   int64
+	BirthLocationProvince  string
+	BirthLocationCity      string
+	BirthLocationCounty    string
+	NativeLocationProvince string
+	NativeLocationCity     string
+	NativeLocationCounty   string
 	ImageID                int64
 }
 

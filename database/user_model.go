@@ -7,6 +7,8 @@ type User struct {
 	Password    string
 	Identity    int64
 	PhoneNumber string
+	University  string
+	Major       string
 	CreateTime  time.Time
 	UpdateTime  time.Time
 }
