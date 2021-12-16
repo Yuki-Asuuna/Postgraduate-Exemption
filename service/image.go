@@ -3,6 +3,7 @@ package service
 import (
 	"Postgraduate-Exemption/constant"
 	"Postgraduate-Exemption/database"
+	"Postgraduate-Exemption/utils/sessions"
 	"Postgraduate-Exemption/utils/helper"
 	"Postgraduate-Exemption/utils/snowflake"
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,7 @@ const (
 func genInternalServerErrorResponse() gin.H {
 	return gin.H{
 		"message": "Upload Image Failed",
-		"status":  http.StatusInternalServerError,
+		"code":  -1,
 	}
 }
 
@@ -41,7 +42,7 @@ func UploadImage(c *gin.Context, file *multipart.FileHeader) (int64, error) {
 	return image_id, nil
 }
 
-func UploadImageTest(c *gin.Context) {
+func UploadUserPhoto(c *gin.Context) {
 	f, err := c.FormFile("image")
 	if err != nil {
 		logrus.Errorf(constant.Service+"UploadImage Failed, err= %v", err)
@@ -54,9 +55,38 @@ func UploadImageTest(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, genInternalServerErrorResponse())
 		return
 	}
+	username := sessions.GetUserNameBySession(c)
+	err = database.UpdateStudentBasicInfoByUserName(username,map[string]interface{}{"image_id":ID})
+	if  err != nil{
+		logrus.Errorf(constant.Service+"UploadImage Failed, err= %v", err)
+		c.JSON(http.StatusInternalServerError,genInternalServerErrorResponse())
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "OK",
-		"pic_id":  ID,
-		"status":  http.StatusOK,
+		"picID":  ID,
+		"code":    0,
 	})
+}
+
+func GetUserPhoto(c *gin.Context) {
+	username := sessions.GetUserNameBySession(c)
+	info,err :=database.GetStudentBasicInfoByUserName(username)
+	if err != nil {
+		logrus.Errorf(constant.Service+"GetUserPhoto Failed, err= %v", err)
+		c.JSON(http.StatusInternalServerError,genInternalServerErrorResponse())
+		return
+	}
+	imageID := info.ImageID
+	mp ,err := database.GetImages([]int64{imageID})
+	if err != nil {
+		logrus.Errorf(constant.Service+"GetUserPhoto Failed, err= %v", err)
+		c.JSON(http.StatusInternalServerError,genInternalServerErrorResponse())
+		return
+	}
+	path,ok := mp[imageID]
+	if !ok {
+		c.File(UPLOAD_DIR+"/unknown.jpg")
+	}
+	c.File(path)
 }

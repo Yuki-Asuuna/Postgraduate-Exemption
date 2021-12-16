@@ -13,9 +13,13 @@ func http_handler_init() {
 	r.GET("/home", service.AuthMiddleWare(), service.Home)
 
 	// image
-	r.POST("/upload_image", service.UploadImageTest)
+	r.POST("/upload_image", service.UploadUserPhoto)
+	r.GET("/load_image", service.GetUserPhoto)
 
 	// info
-	r.GET("/stu_basic_info",service.StudentBasicInfo)
-	r.GET("/account_info",service.GetAccountInfo)
+	r.GET("/stu_basic_info", service.GetStudentBasicInfo)
+	r.POST("/stu_basic_info", service.PostStudentBasicInfo)
+	r.GET("/account_info", service.GetAccountInfo)
+	r.GET("/profile_info", service.GetProfileInfo)
+	r.POST("/profile_info", service.PostProfileInfo)
 }

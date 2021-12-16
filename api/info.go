@@ -25,3 +25,17 @@ type GetStudentBasicInfoResponse struct {
 	NativeLocationCounty   string `json:"nativeLocationCounty"`
 	ImageID                int64  `json:"imageID"`
 }
+
+type GetProfileInfoResponse struct {
+	UserName                  string `json:"username"`
+	ProfileID                 int64 `json:"profileID"`
+	ProfileLocationProvince   string `json:"profileLocationProvince"`
+	ProfileLocationCity       string `json:"profileLocationCity"`
+	ProfileLocationCounty     string `json:"profileLocationCounty"`
+	ProfileAddress            string `json:"profileAddress"`
+	PostCode                  string `json:"postCode"`
+	ResidenceLocationProvince string `json:"residenceLocationProvince"`
+	ResidenceLocationCity     string `json:"residenceLocationCity"`
+	ResidenceLocationCounty   string `json:"residenceLocationCounty"`
+	ResidenceAddress          string `json:"residenceAddress"`
+}

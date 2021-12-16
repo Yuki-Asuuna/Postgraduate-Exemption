@@ -1,7 +1,6 @@
 package service
 
 import (
-	"Postgraduate-Exemption/api"
 	"Postgraduate-Exemption/constant"
 	"Postgraduate-Exemption/database"
 	"Postgraduate-Exemption/utils/sessions"
@@ -40,6 +39,14 @@ func Register(c *gin.Context) {
 		return
 	}
 	if err := database.AddAgreement(username); err != nil {
+		logrus.Error(constant.Service+"Register Failed, err= %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Database failed",
+			"code":    -1,
+		})
+		return
+	}
+	if err := database.AddProfile(username); err != nil {
 		logrus.Error(constant.Service+"Register Failed, err= %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Database failed",
@@ -94,25 +101,4 @@ func Logout(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, GenResponseWithOK())
-}
-
-func GetAccountInfo(c *gin.Context) {
-	username := sessions.GetUserNameBySession(c)
-	account, err := database.GetUserByUserName(username)
-	if err != nil {
-		logrus.Errorf(constant.Service+"GetAccountInfo Failed, err= %v", err)
-		return
-	}
-	resp := api.GetAccountInfoResponse{
-		UserName:    account.UserName,
-		PhoneNumber: account.PhoneNumber,
-		Identity:    account.Identity,
-		University:  account.University,
-		Major:       account.Major,
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"message":     "OK",
-		"code":        0,
-		"accountInfo": resp,
-	})
 }

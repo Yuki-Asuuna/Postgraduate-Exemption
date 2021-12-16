@@ -10,11 +10,11 @@ import (
 	"net/http"
 )
 
-func StudentBasicInfo(c *gin.Context) {
+func GetStudentBasicInfo(c *gin.Context) {
 	username := sessions.GetUserNameBySession(c)
 	info, err := database.GetStudentBasicInfoByUserName(username)
 	if err != nil {
-		logrus.Error(constant.Service+"Get StudentBasicInfo Failed, err= %v", err)
+		logrus.Error(constant.Service+"GetStudentBasicInfo Failed, err= %v", err)
 		return
 	}
 	if info == nil {
@@ -36,10 +36,122 @@ func StudentBasicInfo(c *gin.Context) {
 		NativeLocationProvince: info.NativeLocationProvince,
 		NativeLocationCity:     info.NativeLocationCity,
 		NativeLocationCounty:   info.NativeLocationCounty,
+		ImageID:                info.ImageID,
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"StuBasicInfo": resp,
+		"stuBasicInfo": resp,
 		"message":      "OK",
 		"code":         0,
+	})
+}
+
+func PostStudentBasicInfo(c *gin.Context) {
+	username := sessions.GetUserNameBySession(c)
+	params := make(map[string]interface{})
+	c.BindJSON(&params)
+	//fmt.Println(params["stuBasicInfo"])
+	mp := params["stuBasicInfo"].(map[string]interface{})
+	update := gin.H{
+		"identity_number":          mp["identityNumber"].(string),
+		"name":                     mp["name"].(string),
+		"name_pinyin":              mp["namePinYin"].(string),
+		"military_type":            int64(mp["militaryType"].(float64)),
+		"political_status":         int64(mp["politicalStatus"].(float64)),
+		"gender":                   int64(mp["gender"].(float64)),
+		"martial_status":           int64(mp["martialStatus"].(float64)),
+		"birth_location_province":  mp["birthLocationProvince"].(string),
+		"birth_location_city":      mp["birthLocationCity"].(string),
+		"birth_location_county":    mp["birthLocationCounty"].(string),
+		"native_location_province": mp["nativeLocationProvince"].(string),
+		"native_location_city":     mp["nativeLocationCity"].(string),
+		"native_location_county":   mp["nativeLocationCounty"].(string),
+		"image_id":                 int64(mp["imageID"].(float64)),
+	}
+	err := database.UpdateStudentBasicInfoByUserName(username, update)
+
+	if err != nil {
+		logrus.Errorf(constant.Service+"PostStudentBasicInfo Failed, err= %v", err)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "OK",
+		"code":    0,
+	})
+}
+
+func GetAccountInfo(c *gin.Context) {
+	username := sessions.GetUserNameBySession(c)
+	account, err := database.GetUserByUserName(username)
+	if err != nil {
+		logrus.Errorf(constant.Service+"GetAccountInfo Failed, err= %v", err)
+		return
+	}
+	resp := api.GetAccountInfoResponse{
+		UserName:    account.UserName,
+		PhoneNumber: account.PhoneNumber,
+		Identity:    account.Identity,
+		University:  account.University,
+		Major:       account.Major,
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message":     "OK",
+		"code":        0,
+		"accountInfo": resp,
+	})
+}
+
+func GetProfileInfo(c *gin.Context) {
+	username := sessions.GetUserNameBySession(c)
+	profile, err := database.GetProfileByUserName(username)
+	if err != nil {
+		logrus.Errorf(constant.Service+"GetProfileInfo Failed, err= %v", err)
+		return
+	}
+	resp := api.GetProfileInfoResponse{
+		UserName:                  profile.UserName,
+		ProfileID:                 profile.ProfileID,
+		ProfileLocationProvince:   profile.ProfileLocationProvince,
+		ProfileLocationCity:       profile.ProfileLocationCity,
+		ProfileLocationCounty:     profile.ProfileLocationCounty,
+		ProfileAddress:            profile.ProfileAddress,
+		PostCode:                  profile.PostCode,
+		ResidenceLocationProvince: profile.ResidenceLocationProvince,
+		ResidenceLocationCity:     profile.ResidenceLocationCity,
+		ResidenceLocationCounty:   profile.ResidenceLocationCounty,
+		ResidenceAddress:          profile.ResidenceAddress,
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message":     "OK",
+		"code":        0,
+		"profileInfo": resp,
+	})
+}
+
+func PostProfileInfo(c *gin.Context) {
+	username := sessions.GetUserNameBySession(c)
+	params := make(map[string]interface{})
+	c.BindJSON(&params)
+	//fmt.Println(params["stuBasicInfo"])
+	mp := params["profileInfo"].(map[string]interface{})
+	update := gin.H{
+		"profile_location_province":   mp["profileLocationProvince"].(string),
+		"profile_location_city":       mp["profileLocationCity"].(string),
+		"profile_location_county":     mp["profileLocationCounty"].(string),
+		"profile_address":             mp["profileAddress"].(string),
+		"post_code":                   mp["postCode"].(string),
+		"residence_location_province": mp["residenceLocationProvince"].(string),
+		"residence_location_city":     mp["residenceLocationCity"].(string),
+		"residence_location_county":   mp["residenceLocationCounty"].(string),
+		"residence_address":           mp["residenceAddress"].(string),
+	}
+	err := database.UpdateProfileInfoByUserName(username, update)
+
+	if err != nil {
+		logrus.Errorf(constant.Service+"PostProfileInfo Failed, err= %v", err)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "OK",
+		"code":    0,
 	})
 }
