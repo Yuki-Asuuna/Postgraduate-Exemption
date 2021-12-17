@@ -95,7 +95,7 @@ func TestGetStudentBasicInfoByUserName(t *testing.T) {
 }
 
 func TestAddStudyInfo(t *testing.T) {
-	err := AddStudyInfo("jack", 1111)
+	err := AddStudyInfo("jack")
 	if err != nil {
 		t.Error(err)
 	}

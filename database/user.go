@@ -37,3 +37,12 @@ func AddUser(username string, password string, identity int64, phonenumber strin
 	}
 	return nil
 }
+
+func UpdateUserByUserName(userName string, updateMap map[string]interface{}) error {
+	err := mysql.GetMySQLClient().Model(&User{}).Where("user_name = (?)", userName).Update(updateMap).Error
+	if err != nil {
+		logrus.Errorf(constant.DAO+"UpdateUserByUserName Failed, err= %v, userName= %v", err, userName)
+		return err
+	}
+	return nil
+}

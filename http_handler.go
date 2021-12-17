@@ -10,11 +10,16 @@ func http_handler_init() {
 	r.POST("/register", service.Register)
 	r.POST("/login", service.Login)
 	r.POST("/logout", service.Logout)
+	r.POST("/password", service.ChangePassword)
 	r.GET("/home", service.AuthMiddleWare(), service.Home)
 
 	// image
 	r.POST("/upload_image", service.UploadUserPhoto)
 	r.GET("/load_image", service.GetUserPhoto)
+
+	// agreement
+	r.GET("/agreement", service.GetAgreementInfo)
+	r.POST("/agreement", service.PostAgreementInfo)
 
 	// info
 	r.GET("/stu_basic_info", service.GetStudentBasicInfo)
@@ -22,4 +27,15 @@ func http_handler_init() {
 	r.GET("/account_info", service.GetAccountInfo)
 	r.GET("/profile_info", service.GetProfileInfo)
 	r.POST("/profile_info", service.PostProfileInfo)
+	r.GET("/member_info", service.GetMembersInfo)
+	r.POST("/member_info", service.PostMemberInfo)
+	r.GET("/contact_info", service.GetContactInfo)
+	r.POST("/contact_info", service.PostContactInfo)
+	r.GET("/study_info", service.GetStudyInfo)
+	r.POST("/study_info", service.PostStudyInfo)
+	r.GET("/experiences_info", service.GetExperiencesInfo)
+	r.POST("/experiences_info",service.PostExperiencesInfo)
+
+	// application
+
 }

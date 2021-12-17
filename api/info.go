@@ -28,7 +28,7 @@ type GetStudentBasicInfoResponse struct {
 
 type GetProfileInfoResponse struct {
 	UserName                  string `json:"username"`
-	ProfileID                 int64 `json:"profileID"`
+	ProfileID                 int64  `json:"profileID"`
 	ProfileLocationProvince   string `json:"profileLocationProvince"`
 	ProfileLocationCity       string `json:"profileLocationCity"`
 	ProfileLocationCounty     string `json:"profileLocationCounty"`
@@ -38,4 +38,35 @@ type GetProfileInfoResponse struct {
 	ResidenceLocationCity     string `json:"residenceLocationCity"`
 	ResidenceLocationCounty   string `json:"residenceLocationCounty"`
 	ResidenceAddress          string `json:"residenceAddress"`
+}
+
+type GetMemberInfoResponse struct {
+	MemberID     int64  `json:"memberID"`
+	ProfileID    int64  `json:"profileID"`
+	Name         string `json:"name"`
+	Relationship string `json:"relationship"`
+	PhoneNumber  string `json:"phoneNumber"`
+	Address      string `json:"address"`
+}
+
+type GetContactInfoResponse struct {
+	PhoneNumber     string `json:"phoneNumber"`
+	FixedLineNumber string `json:"fixedLineNumber"`
+	Address         string `json:"address"`
+	PostCode        string `json:"postCode"`
+}
+
+type GetStudyInfoResponse struct {
+	StudyInfoID     int64  `json:"studyInfoID"`
+	UserName        string `json:"username"`
+	SchoolName      string `json:"schoolName"`
+	Writing         string `json:"writing"`
+	AwardPunishment string `json:"awardPunishment"`
+	Cheating        string `json:"cheating"`
+}
+
+type GetExperiencesInfoResponse struct {
+	ExperienceID int64  `json:"experienceID"`
+	Interval     string `json:"interval"`
+	WorkPlace    string `json:"work_place"`
 }

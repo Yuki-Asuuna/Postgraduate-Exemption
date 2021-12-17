@@ -1,9 +1,10 @@
 package database
 
 type StudyExp struct {
-	StudyInfoID int64
-	Interval    string
-	WorkPlace   string
+	ExperienceID int64
+	StudyInfoID  int64
+	Interval     string
+	WorkPlace    string
 }
 
 func (StudyExp) TableName() string {

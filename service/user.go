@@ -40,18 +40,22 @@ func Register(c *gin.Context) {
 	}
 	if err := database.AddAgreement(username); err != nil {
 		logrus.Error(constant.Service+"Register Failed, err= %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Database failed",
-			"code":    -1,
-		})
+		c.JSON(http.StatusInternalServerError, GenResponseWithDatabaseFailed())
 		return
 	}
 	if err := database.AddProfile(username); err != nil {
 		logrus.Error(constant.Service+"Register Failed, err= %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Database failed",
-			"code":    -1,
-		})
+		c.JSON(http.StatusInternalServerError, GenResponseWithDatabaseFailed())
+		return
+	}
+	if err := database.AddContactInfo(username); err != nil {
+		logrus.Error(constant.Service+"Register Failed, err= %v", err)
+		c.JSON(http.StatusInternalServerError, GenResponseWithDatabaseFailed())
+		return
+	}
+	if err := database.AddStudyInfo(username); err != nil {
+		logrus.Error(constant.Service+"Register Failed, err= %v", err)
+		c.JSON(http.StatusInternalServerError, GenResponseWithDatabaseFailed())
 		return
 	}
 	c.JSON(http.StatusOK, GenResponseWithOK())
@@ -69,7 +73,7 @@ func Login(c *gin.Context) {
 	}
 	if user == nil {
 		c.JSON(http.StatusNoContent, gin.H{
-			"message": "UserName Not Found",
+			"message": "Username Not Found",
 			"code":    -1,
 		})
 		return
@@ -98,6 +102,42 @@ func Logout(c *gin.Context) {
 	err := sessions.GetSessionClient().Save(c.Request, c.Writer, session)
 	if err != nil {
 		logrus.Errorf(constant.Service+"Logout Failed, err= %v", err)
+		return
+	}
+	c.JSON(http.StatusOK, GenResponseWithOK())
+}
+
+func ChangePassword(c *gin.Context) {
+	username := sessions.GetUserNameBySession(c)
+	params := make(map[string]interface{})
+	c.BindJSON(&params)
+	newpass := params["password"].(string)
+	oldpass := params["oldPassword"].(string)
+	user, err := database.GetUserByUserName(username)
+	if err != nil {
+		logrus.Errorf(constant.Service+"ChangePassword Failed, err= %v", err)
+		c.JSON(http.StatusInternalServerError, GenResponseWithDatabaseFailed())
+		return
+	}
+	if user == nil {
+		logrus.Errorf(constant.Service+"ChangePassword Failed, err= %v", err)
+		c.JSON(http.StatusInternalServerError, GenResponseWithUnauthorized())
+		return
+	}
+	if user.Password != oldpass {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Password Incorrect",
+			"code":    "-1",
+		})
+		return
+	}
+	update := gin.H{
+		"password": newpass,
+	}
+	err = database.UpdateUserByUserName(username, update)
+	if err != nil {
+		logrus.Errorf(constant.Service+"ChangePassword Failed, err= %v", err)
+		c.JSON(http.StatusInternalServerError, GenResponseWithDatabaseFailed())
 		return
 	}
 	c.JSON(http.StatusOK, GenResponseWithOK())

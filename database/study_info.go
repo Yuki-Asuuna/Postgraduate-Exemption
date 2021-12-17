@@ -3,11 +3,13 @@ package database
 import (
 	"Postgraduate-Exemption/constant"
 	"Postgraduate-Exemption/utils/mysql"
+	"Postgraduate-Exemption/utils/snowflake"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
 )
 
-func AddStudyInfo(userName string, studyInfoID int64) error {
+func AddStudyInfo(userName string) error {
+	studyInfoID := snowflake.GenID()
 	studyInfo := StudyInfo{
 		UserName:    userName,
 		StudyInfoID: studyInfoID,
@@ -15,6 +17,13 @@ func AddStudyInfo(userName string, studyInfoID int64) error {
 	if err := mysql.GetMySQLClient().Create(&studyInfo).Error; err != nil {
 		logrus.Errorf(constant.DAO+"AddStudyInfo Failed, err= %v", err)
 		return err
+	}
+	for i := 0; i < 4; i++ {
+		err := AddExperience(studyInfoID)
+		if err != nil {
+			logrus.Errorf(constant.DAO+"AddStudyInfo Failed, err= %v", err)
+			return err
+		}
 	}
 	return nil
 }

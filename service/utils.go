@@ -17,3 +17,10 @@ func GenResponseWithUnauthorized() gin.H {
 		"code":  -2,
 	}
 }
+
+func GenResponseWithDatabaseFailed() gin.H {
+	return gin.H{
+		"message": "Database Failed",
+		"code":  -1,
+	}
+}

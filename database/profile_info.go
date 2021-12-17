@@ -18,6 +18,13 @@ func AddProfile(userName string) error {
 		logrus.Errorf(constant.DAO+"AddProfile Failed, err= %v", err)
 		return err
 	}
+	for i := 0; i < 3; i++ {
+		err := AddFamilyMember(ID)
+		if err != nil {
+			logrus.Errorf(constant.DAO+"AddProfile Failed, err= %v", err)
+			return err
+		}
+	}
 	return nil
 }
 
