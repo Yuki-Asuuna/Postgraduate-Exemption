@@ -34,8 +34,14 @@ func http_handler_init() {
 	r.GET("/study_info", service.GetStudyInfo)
 	r.POST("/study_info", service.PostStudyInfo)
 	r.GET("/experiences_info", service.GetExperiencesInfo)
-	r.POST("/experiences_info",service.PostExperiencesInfo)
+	r.POST("/experiences_info", service.PostExperiencesInfo)
 
 	// application
-
+	r.GET("/stu_application", service.GetStuApplication)
+	r.DELETE("/stu_application", service.DeleteStuApplication)
+	r.POST("/stu_application", service.PostStuApplication)
+	r.PUT("/stu_application", service.PutStuApplication)
+	r.GET("/tea_application", service.GetTeaApplication)
+	r.POST("/tea_admit", service.PostTeaAdmit)
+	r.POST("/stu_confirm", service.PostStuConfirm)
 }

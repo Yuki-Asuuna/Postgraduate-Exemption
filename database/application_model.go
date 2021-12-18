@@ -8,7 +8,7 @@ type Application struct {
 	University    string
 	Major         string
 	IsAdmitted    int64
-	isConfirmed   int64
+	IsConfirmed   int64
 	SubmitTime    time.Time
 }
 
