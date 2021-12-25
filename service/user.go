@@ -43,6 +43,11 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, GenResponseWithDatabaseFailed())
 		return
 	}
+	if err := database.AddStudentBasicInfo(username); err != nil {
+		logrus.Error(constant.Service+"Register Failed, err= %v", err)
+		c.JSON(http.StatusInternalServerError, GenResponseWithDatabaseFailed())
+		return
+	}
 	if err := database.AddProfile(username); err != nil {
 		logrus.Error(constant.Service+"Register Failed, err= %v", err)
 		c.JSON(http.StatusInternalServerError, GenResponseWithDatabaseFailed())
