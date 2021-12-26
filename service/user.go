@@ -15,7 +15,7 @@ func Register(c *gin.Context) {
 	username := params["username"].(string)
 	password := params["password"].(string)
 	identity := int64(params["identity"].(float64))
-	phonenumber := params["phone_number"].(string)
+	phonenumber := params["phoneNumber"].(string)
 	university := params["university"].(string)
 	major := params["major"].(string)
 	user, err := database.GetUserByUserName(username)
