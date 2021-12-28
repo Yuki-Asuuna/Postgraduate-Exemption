@@ -73,6 +73,10 @@ func Login(c *gin.Context) {
 	password := params["password"].(string)
 	user, err := database.GetUserByUserName(username)
 	if err != nil {
+		c.JSON(http.StatusNoContent, gin.H{
+			"message": "Unknown username or password",
+			"code":    -1,
+		})
 		logrus.Error(constant.Service+"Login Failed, err= %v", err)
 		return
 	}

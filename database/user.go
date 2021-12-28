@@ -15,7 +15,7 @@ func GetUserByUserName(userName string) (*User, error) {
 			return nil, nil
 		}
 		logrus.Errorf(constant.DAO+"GetUserByUserName Failed, err= %v", err)
-		return nil, nil
+		return nil, err
 	}
 	return user, nil
 }
