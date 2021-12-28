@@ -88,5 +88,11 @@ func GetUserPhoto(c *gin.Context) {
 	if !ok {
 		c.File(UPLOAD_DIR+"/unknown.jpg")
 	}
-	c.File(path)
+	// 图片id失效的情况
+	b,err := helper.PathExists(path)
+	if b {
+		c.File(path)
+	} else {
+		c.File(UPLOAD_DIR+"/unknown.jpg")
+	}
 }
