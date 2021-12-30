@@ -94,10 +94,10 @@ func PutStuApplication(c *gin.Context) {
 	c.JSON(http.StatusOK, GenResponseWithOK())
 }
 
-func GetTeaApplication(c *gin.Context){
+func GetTeaApplication(c *gin.Context) {
 	uni := c.Query("university")
 	maj := c.Query("major")
-	applications, err := database.GetApplicationsByUniversityAndMajor(uni,maj)
+	applications, err := database.GetApplicationsByUniversityAndMajor(uni, maj)
 	if err != nil {
 		logrus.Errorf(constant.Service+"GetTeaApplication Failed, err= %v", err)
 		c.JSON(http.StatusInternalServerError, GenResponseWithDatabaseFailed())
@@ -110,7 +110,7 @@ func GetTeaApplication(c *gin.Context){
 	}
 	resp := make([]api.StuApplicationResponse, 0)
 	for _, a := range applications {
-		resp = append(resp, api.StuApplicationResponse{
+		e := api.StuApplicationResponse{
 			ApplicationID: a.ApplicationID,
 			UserName:      a.UserName,
 			University:    a.University,
@@ -118,7 +118,13 @@ func GetTeaApplication(c *gin.Context){
 			IsAdmitted:    a.IsAdmitted,
 			IsConfirmed:   a.IsConfirmed,
 			SubmitTime:    a.SubmitTime,
-		})
+		}
+		userInfo, _ := database.GetUserByUserName(a.UserName)
+		if userInfo != nil {
+			e.OriginalMajor = userInfo.Major
+			e.OriginalUniversity = userInfo.University
+		}
+		resp = append(resp, e)
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"message":        "OK",
