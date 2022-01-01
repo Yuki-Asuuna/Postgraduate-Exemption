@@ -10,7 +10,7 @@ import (
 
 func GetUserByUserName(userName string) (*User, error) {
 	user := new(User)
-	if err := mysql.GetMySQLClient().Where("user_name = ?", userName).Find(&user).Error; err != nil {
+	if err := mysql.GetMySQLClient().First(&user,"user_name = ?", userName).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
 		}
