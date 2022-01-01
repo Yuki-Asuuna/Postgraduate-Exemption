@@ -73,7 +73,7 @@ func Login(c *gin.Context) {
 	password := params["password"].(string)
 	user, err := database.GetUserByUserName(username)
 	if err != nil {
-		c.JSON(http.StatusNoContent, gin.H{
+		c.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Unknown username or password",
 			"code":    -1,
 		})
@@ -81,7 +81,7 @@ func Login(c *gin.Context) {
 		return
 	}
 	if user == nil {
-		c.JSON(http.StatusNoContent, gin.H{
+		c.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Username Not Found",
 			"code":    -1,
 		})
